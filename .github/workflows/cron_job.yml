@@ -15,4 +15,4 @@ jobs:
           CRON_URL: ${{ secrets.CRON_JOB_URL }}
         run: |
           echo "Triggering $CRON_URL"
-          curl -s -o /dev/null -w "%{http_code}\n" "$CRON_URL"
+          curl -k -A -A "GitHubActionsBot" -s -o /dev/null -w "%{http_code}\n" "$CRON_URL"
