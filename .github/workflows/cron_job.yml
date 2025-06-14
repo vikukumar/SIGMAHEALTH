@@ -1,18 +1,18 @@
-name: Run Health Check
+# name: Run Health Check
 
-on:
-  schedule:
-    - cron: '* * * * *'  # Every minute
-  workflow_dispatch:      # Optional manual trigger for testing
+# on:
+#   schedule:
+#     - cron: '* * * * *'  # Every minute
+#   workflow_dispatch:      # Optional manual trigger for testing
 
-jobs:
-  health-check:
-    runs-on: ubuntu-latest
-    environment: dev   
-    steps:
-      - name: Trigger Dev health URL
-        env:
-          CRON_URL: "https://vikshro.ct.ws/health"
-        run: |
-          echo "Triggering $CRON_URL"
-          curl -L -X GET '$CRON_URL?i=1' -H 'User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36' -H 'Cookie: __test=7218b20f89767d9d1585c9403e7678ee; perf_dv6Tr4n=1' -H 'referer: $CRON_URL' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7'
+# jobs:
+#   health-check:
+#     runs-on: ubuntu-latest
+#     environment: dev   
+#     steps:
+#       - name: Trigger Dev health URL
+#         env:
+#           CRON_URL: "https://vikshro.ct.ws/health"
+#         run: |
+#           echo "Triggering $CRON_URL"
+#           curl -L -X GET '$CRON_URL?i=1' -H 'User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36' -H 'Cookie: __test=7218b20f89767d9d1585c9403e7678ee; perf_dv6Tr4n=1' -H 'referer: $CRON_URL' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7'
