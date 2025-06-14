@@ -1,0 +1,27 @@
+name: Enhanced URL Cron
+on:
+  schedule:
+    - cron: '* * * * *'
+  workflow_dispatch:
+
+jobs:
+  monitor:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check URL
+        id: url-check
+        run: |
+          response=$(curl -s -o response.txt -w "%{http_code}" "${{ secrets.CRON_JOB_URL }}")
+          echo "status_code=$response" >> $GITHUB_OUTPUT
+          
+          if [ $response -ne 200 ]; then
+            echo "::error::URL returned $response"
+            exit 1
+          fi
+          
+      - name: Upload logs
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: response-${{ github.run_id }}
+          path: response.txt
