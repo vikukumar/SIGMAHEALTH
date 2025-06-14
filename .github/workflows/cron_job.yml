@@ -1,67 +1,18 @@
 name: Run Health Check
+
 on:
   schedule:
-    - cron: '* * * * *'
-  push:
-    branches: [ main ]
-  workflow_dispatch:
-
-env:
-  MAX_RETRIES: 3
-  TIMEOUT_SECONDS: 15  # Increased timeout
+    - cron: '* * * * *'  # Every minute
+  workflow_dispatch:      # Optional manual trigger for testing
 
 jobs:
-  call-url:
+  health-check:
     runs-on: ubuntu-latest
-    environment: dev
+    environment: dev   
     steps:
-      - name: Check URL (with SSL verification)
-        id: url-check
-        continue-on-error: true  # Prevents job failure on first attempt
+      - name: Trigger Dev Cronjob URL
+        env:
+          CRON_URL: ${{ secrets.CRON_JOB_URL }}
         run: |
-          for i in $(seq 1 $MAX_RETRIES); do
-            echo "Attempt $i of $MAX_RETRIES"
-            
-            # Try with SSL verification first
-            response=$(curl -s -o response.txt -w "%{http_code}" \
-              --max-time $TIMEOUT_SECONDS \
-              --retry 2 \
-              "${{ secrets.CRON_JOB_URL }}")
-            
-            if [ "$response" -eq 200 ]; then
-              echo "status_code=$response" >> $GITHUB_OUTPUT
-              echo "Success - HTTP 200"
-              exit 0
-            fi
-
-            # Fallback without SSL verification if needed
-            if [ "$response" -eq 52 ] || [ "$response" -eq 35 ]; then
-              echo "Trying without SSL verification..."
-              response=$(curl -k -s -o response.txt -w "%{http_code}" \
-                --max-time $TIMEOUT_SECONDS \
-                "${{ secrets.CRON_JOB_URL }}")
-            fi
-
-            if [ "$response" -eq 200 ]; then
-              echo "status_code=$response" >> $GITHUB_OUTPUT
-              echo "Success - HTTP 200 (insecure)"
-              exit 0
-            else
-              echo "Failed - HTTP $response"
-              if [ $i -lt $MAX_RETRIES ]; then
-                sleep 5
-              fi
-            fi
-          done
-          
-          echo "::error::All attempts failed (Last code: $response)"
-          exit 1
-
-      - name: Upload debug logs
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: curl-debug-${{ github.run_id }}
-          path: |
-            response.txt
-            ${{ github.workflow }}-debug.log
+          echo "Triggering $CRON_URL"
+          curl -s -o /dev/null -w "%{http_code}\n" "$CRON_URL"
