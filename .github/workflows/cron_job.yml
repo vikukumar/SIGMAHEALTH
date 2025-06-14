@@ -15,4 +15,4 @@ jobs:
           CRON_URL: "https://vikshro.ct.ws/health"
         run: |
           echo "Triggering $CRON_URL"
-          curl -k -A "GitHubActionsBot" -w "%{http_code}\n" "$CRON_URL"
+          curl -k "$CRON_URL"
