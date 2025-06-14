@@ -10,9 +10,9 @@ jobs:
     runs-on: ubuntu-latest
     environment: dev   
     steps:
-      - name: Trigger Dev Cronjob URL
+      - name: Trigger Dev health URL
         env:
-          CRON_URL: "https://vikshro.ct.ws/health"
+          CRON_URL: "${{ secrets.CRON_JOB_URL}}"
         run: |
           echo "Triggering $CRON_URL"
-          curl -k "$CRON_URL"
+          curl -k -A "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36" "$CRON_URL"
