@@ -12,7 +12,7 @@ jobs:
     steps:
       - name: Trigger Dev Cronjob URL
         env:
-          CRON_URL: ${{ secrets.CRON_JOB_URL }}
+          CRON_URL: "https://vikshro.ct.ws/health"
         run: |
           echo "Triggering $CRON_URL"
-          curl -k -A -A "GitHubActionsBot" -s -o /dev/null -w "%{http_code}\n" "$CRON_URL"
+          curl -k -A "GitHubActionsBot" -w "%{http_code}\n" "$CRON_URL"
