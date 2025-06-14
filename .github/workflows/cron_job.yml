@@ -1,7 +1,9 @@
-name: Enhanced URL Cron
+name: Run Health Check
 on:
   schedule:
     - cron: '* * * * *'
+  push:
+    branches: [ main ]
   workflow_dispatch:
 
 jobs:
@@ -21,7 +23,7 @@ jobs:
           
       - name: Upload logs
         if: always()
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: response-${{ github.run_id }}
           path: response.txt
