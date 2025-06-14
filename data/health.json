@@ -1,0 +1,93 @@
+{
+    "last_checked": "2025-06-14 18:48:26",
+    "next_check": "2025-06-14 18:48:31",
+    "servers": {
+        "https:\/\/vikshro.in": {
+            "name": "Test",
+            "icon": "\ud83d\udda5\ufe0f",
+            "current_status": {
+                "timestamp": "2025-06-14 18:48:27",
+                "status": "up",
+                "status_code": 200,
+                "latency_ms": 435,
+                "ip_address": "104.21.32.1",
+                "response_sample": "\n\n\n\n  \n  \n  \n  \n  \n\n    VIKSHRO: Best Valuable IT Services, Hosting, SEO Management Company\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n    \n  \n  \n  \n  \n  \n  \n  @font-face {font-family:Open Sans;font-style:normal;font-weight:3"
+            },
+            "health_history": [
+                {
+                    "timestamp": "2025-06-14 18:48:27",
+                    "status": "up",
+                    "status_code": 200,
+                    "latency_ms": 435,
+                    "ip_address": "104.21.32.1",
+                    "response_sample": "\n\n\n\n  \n  \n  \n  \n  \n\n    VIKSHRO: Best Valuable IT Services, Hosting, SEO Management Company\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n    \n  \n  \n  \n  \n  \n  \n  @font-face {font-family:Open Sans;font-style:normal;font-weight:3"
+                },
+                {
+                    "timestamp": "2025-06-14 18:48:26",
+                    "status": "up",
+                    "status_code": 200,
+                    "latency_ms": 497,
+                    "ip_address": "104.21.32.1",
+                    "response_sample": "\n\n\n\n  \n  \n  \n  \n  \n\n    VIKSHRO: Best Valuable IT Services, Hosting, SEO Management Company\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n    \n  \n  \n  \n  \n  \n  \n  @font-face {font-family:Open Sans;font-style:normal;font-weight:3"
+                },
+                {
+                    "timestamp": "2025-06-14 18:48:25",
+                    "status": "up",
+                    "status_code": 200,
+                    "latency_ms": 372,
+                    "ip_address": "104.21.32.1",
+                    "response_sample": "\n\n\n\n  \n  \n  \n  \n  \n\n    VIKSHRO: Best Valuable IT Services, Hosting, SEO Management Company\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n    \n  \n  \n  \n  \n  \n  \n  @font-face {font-family:Open Sans;font-style:normal;font-weight:3"
+                },
+                {
+                    "timestamp": "2025-06-14 18:48:24",
+                    "status": "up",
+                    "status_code": 200,
+                    "latency_ms": 391,
+                    "ip_address": "104.21.32.1",
+                    "response_sample": "\n\n\n\n  \n  \n  \n  \n  \n\n    VIKSHRO: Best Valuable IT Services, Hosting, SEO Management Company\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n    \n  \n  \n  \n  \n  \n  \n  @font-face {font-family:Open Sans;font-style:normal;font-weight:3"
+                },
+                {
+                    "timestamp": "2025-06-14 18:48:23",
+                    "status": "up",
+                    "status_code": 200,
+                    "latency_ms": 353,
+                    "ip_address": "104.21.32.1",
+                    "response_sample": "\n\n\n\n  \n  \n  \n  \n  \n\n    VIKSHRO: Best Valuable IT Services, Hosting, SEO Management Company\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n    \n  \n  \n  \n  \n  \n  \n  @font-face {font-family:Open Sans;font-style:normal;font-weight:3"
+                },
+                {
+                    "timestamp": "2025-06-14 18:48:23",
+                    "status": "up",
+                    "status_code": 200,
+                    "latency_ms": 360,
+                    "ip_address": "104.21.32.1",
+                    "response_sample": "\n\n\n\n  \n  \n  \n  \n  \n\n    VIKSHRO: Best Valuable IT Services, Hosting, SEO Management Company\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n    \n  \n  \n  \n  \n  \n  \n  @font-face {font-family:Open Sans;font-style:normal;font-weight:3"
+                },
+                {
+                    "timestamp": "2025-06-14 18:48:22",
+                    "status": "up",
+                    "status_code": 200,
+                    "latency_ms": 337,
+                    "ip_address": "104.21.32.1",
+                    "response_sample": "\n\n\n\n  \n  \n  \n  \n  \n\n    VIKSHRO: Best Valuable IT Services, Hosting, SEO Management Company\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n    \n  \n  \n  \n  \n  \n  \n  @font-face {font-family:Open Sans;font-style:normal;font-weight:3"
+                },
+                {
+                    "timestamp": "2025-06-14 18:48:20",
+                    "status": "up",
+                    "status_code": 200,
+                    "latency_ms": 528,
+                    "ip_address": "104.21.32.1",
+                    "response_sample": "\n\n\n\n  \n  \n  \n  \n  \n\n    VIKSHRO: Best Valuable IT Services, Hosting, SEO Management Company\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n    \n  \n  \n  \n  \n  \n  \n  @font-face {font-family:Open Sans;font-style:normal;font-weight:3"
+                },
+                {
+                    "timestamp": "2025-06-14 18:42:58",
+                    "status": "up",
+                    "status_code": 200,
+                    "latency_ms": 1206,
+                    "ip_address": "104.21.32.1",
+                    "response_sample": "\n\n\n\n  \n  \n  \n  \n  \n\n    VIKSHRO: Best Valuable IT Services, Hosting, SEO Management Company\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n    \n  \n  \n  \n  \n  \n  \n  @font-face {font-family:Open Sans;font-style:normal;font-weight:3"
+                }
+            ],
+            "total_checks": 9
+        }
+    }
+}

@@ -1,0 +1,9 @@
+[
+    {
+        "server_index": -1,
+        "schedule": "*\/5 * * * *",
+        "command": "\/usr\/bin\/php D:\\www\\SIMGAUP\/health.php",
+        "enabled": true,
+        "system": true
+    }
+]
