@@ -34,11 +34,14 @@ jobs:
         run: |
           echo "Downloading trigger binary from GitHub release..."
           LATEST_TAG=$(curl -s -H "Authorization: token $GH_TOKEN" https://api.github.com/repos/${{ github.repository }}/releases/latest | jq -r .tag_name)
+          echo "$LATEST_TAG"
           curl -L \
             -H "Authorization: token $GH_TOKEN" \
             -o "${{ env.BIN_PATH }}" \
             "https://github.com/${{ github.repository }}/releases/download/${LATEST_TAG}/${{ env.BIN_NAME }}"
           chmod +x "${{ env.BIN_PATH }}"
+          ls trigger-bin
+          ls
 
       - name: Run trigger binary with URL
         run: |
