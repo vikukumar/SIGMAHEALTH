@@ -40,8 +40,6 @@ jobs:
             -o "${{ env.BIN_PATH }}" \
             "https://github.com/vikshrogit/trigger/releases/download/${LATEST_TAG}/${{ env.BIN_NAME }}"
           chmod +x "${{ env.BIN_PATH }}"
-          ls trigger-bin
-          cat ${{ env.BIN_PATH }}
 
       - name: Run trigger binary with URL
         run: |
