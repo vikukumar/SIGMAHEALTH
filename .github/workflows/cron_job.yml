@@ -2,7 +2,7 @@ name: Trigger Cron Runner
 
 on:
   schedule:
-    - cron: '*/1 * * * *' # every 1 minute (GitHub cron is not real-time, it may run with some delay)
+    - cron: '*/5 * * * *' # every 1 minute (GitHub cron is not real-time, it may run with some delay)
   workflow_dispatch:       # also allow manual trigger
 
 env:
