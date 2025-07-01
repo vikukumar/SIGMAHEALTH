@@ -20,6 +20,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Restore workspace cache
+        if: always()
         id: cache-restore
         uses: actions/cache@v4
         with:
@@ -58,9 +59,9 @@ jobs:
         run: |
           ./${{ env.BIN_PATH }} -u "${{ env.TRIGGER_URL }}"
 
-      - name: Save workspace to cache
-        if: always()  # Ensure this runs even if previous step fails
-        uses: actions/cache@v4
-        with:
-          path: .  # Cache the full workspace
-          key: ${{ env.CACHE_KEY_PREFIX }}-${{ github.run_id }}
+      # - name: Save workspace to cache
+      #   if: always()  # Ensure this runs even if previous step fails
+      #   uses: actions/cache@v4
+      #   with:
+      #     path: .  # Cache the full workspace
+      #     key: ${{ env.CACHE_KEY_PREFIX }}-${{ github.run_id }}
