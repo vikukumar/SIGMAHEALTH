@@ -2,20 +2,30 @@ name: Trigger Cron Runner
 
 on:
   schedule:
-    - cron: '*/5 * * * *' # every 1 minute (GitHub cron is not real-time, it may run with some delay)
-  workflow_dispatch:       # also allow manual trigger
+    - cron: '*/10 * * * *'
+  workflow_dispatch:
 
 env:
-  TRIGGER_URL: ${{secrets.CRON_JOB_URL}}  # your input URL
+  TRIGGER_URL: ${{ secrets.CRON_JOB_URL }}
   BIN_NAME: trigger.bin
   BIN_PATH: trigger-bin/trigger
+  WORKSPACE_ARTIFACT: saved-workspace
 
 jobs:
   trigger-job:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Create binary folder
+      - name: Checkout (to allow caching to work properly)
+        uses: actions/checkout@v4
+
+      - name: Try downloading previous workspace artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: ${{ env.WORKSPACE_ARTIFACT }}
+        continue-on-error: true  # Ignore error if artifact not found
+
+      - name: Recreate binary folder if needed
         run: mkdir -p trigger-bin
 
       - name: Check if trigger binary exists
@@ -44,3 +54,10 @@ jobs:
       - name: Run trigger binary with URL
         run: |
           ./${{ env.BIN_PATH }} -u "${{ env.TRIGGER_URL }}"
+
+      - name: Upload updated workspace as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ env.WORKSPACE_ARTIFACT }}
+          path: .
+          retention-days: 1  # or increase depending on your needs
