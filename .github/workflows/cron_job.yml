@@ -2,34 +2,33 @@ name: Trigger Cron Runner
 
 on:
   schedule:
-    - cron: '*/5 * * * *' # every 5 minutes
-  workflow_dispatch:       # also allow manual trigger
+    - cron: '*/5 * * * *'  # Every 5 minutes
+  workflow_dispatch:
 
 env:
   TRIGGER_URL: ${{ secrets.CRON_JOB_URL }}
   BIN_NAME: trigger.bin
   BIN_PATH: trigger-bin/trigger
+  CACHE_KEY_PREFIX: trigger-cache
 
 jobs:
   trigger-job:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repo
+      - name: Checkout code (if any)
         uses: actions/checkout@v4
 
-      - name: Cache workspace
-        id: cache-workspace
+      - name: Restore workspace cache
+        id: cache-restore
         uses: actions/cache@v4
         with:
-          path: |
-            trigger-bin
-            .workspace-state
-          key: workspace-${{ runner.os }}-${{ github.ref_name }}
+          path: .  # Cache the full workspace
+          key: ${{ env.CACHE_KEY_PREFIX }}-${{ github.run_id }}
           restore-keys: |
-            workspace-${{ runner.os }}-
-      
-      - name: Ensure binary folder exists
+            ${{ env.CACHE_KEY_PREFIX }}-
+
+      - name: Create binary folder
         run: mkdir -p trigger-bin
 
       - name: Check if trigger binary exists
@@ -48,22 +47,20 @@ jobs:
         run: |
           echo "Downloading trigger binary from GitHub release..."
           LATEST_TAG=$(curl -s -H "Authorization: token $GH_TOKEN" https://api.github.com/repos/vikshrogit/trigger/releases/latest | jq -r .tag_name)
+          echo "$LATEST_TAG"
           curl -L \
             -H "Authorization: token $GH_TOKEN" \
             -o "${{ env.BIN_PATH }}" \
             "https://github.com/vikshrogit/trigger/releases/download/${LATEST_TAG}/${{ env.BIN_NAME }}"
           chmod +x "${{ env.BIN_PATH }}"
-          echo "binary_updated=true" >> $GITHUB_ENV
 
-      - name: Run trigger binary
+      - name: Run trigger binary with URL
         run: |
           ./${{ env.BIN_PATH }} -u "${{ env.TRIGGER_URL }}"
 
-      - name: Save updated workspace cache
-        if: always()
-        uses: actions/cache/save@v4
+      - name: Save workspace to cache
+        if: always()  # Ensure this runs even if previous step fails
+        uses: actions/cache@v4
         with:
-          path: |
-            trigger-bin
-            .workspace-state
-          key: workspace-${{ runner.os }}-${{ github.ref_name }}-${{ github.run_id }}
+          path: .  # Cache the full workspace
+          key: ${{ env.CACHE_KEY_PREFIX }}-${{ github.run_id }}
