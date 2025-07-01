@@ -2,30 +2,34 @@ name: Trigger Cron Runner
 
 on:
   schedule:
-    - cron: '*/10 * * * *'
-  workflow_dispatch:
+    - cron: '*/5 * * * *' # every 5 minutes
+  workflow_dispatch:       # also allow manual trigger
 
 env:
   TRIGGER_URL: ${{ secrets.CRON_JOB_URL }}
   BIN_NAME: trigger.bin
   BIN_PATH: trigger-bin/trigger
-  WORKSPACE_ARTIFACT: saved-workspace
 
 jobs:
   trigger-job:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout (to allow caching to work properly)
+      - name: Checkout repo
         uses: actions/checkout@v4
 
-      - name: Try downloading previous workspace artifact
-        uses: actions/download-artifact@v4
+      - name: Cache workspace
+        id: cache-workspace
+        uses: actions/cache@v4
         with:
-          name: ${{ env.WORKSPACE_ARTIFACT }}
-        continue-on-error: true  # Ignore error if artifact not found
-
-      - name: Recreate binary folder if needed
+          path: |
+            trigger-bin
+            .workspace-state
+          key: workspace-${{ runner.os }}-${{ github.ref_name }}
+          restore-keys: |
+            workspace-${{ runner.os }}-
+      
+      - name: Ensure binary folder exists
         run: mkdir -p trigger-bin
 
       - name: Check if trigger binary exists
@@ -44,20 +48,22 @@ jobs:
         run: |
           echo "Downloading trigger binary from GitHub release..."
           LATEST_TAG=$(curl -s -H "Authorization: token $GH_TOKEN" https://api.github.com/repos/vikshrogit/trigger/releases/latest | jq -r .tag_name)
-          echo "$LATEST_TAG"
           curl -L \
             -H "Authorization: token $GH_TOKEN" \
             -o "${{ env.BIN_PATH }}" \
             "https://github.com/vikshrogit/trigger/releases/download/${LATEST_TAG}/${{ env.BIN_NAME }}"
           chmod +x "${{ env.BIN_PATH }}"
+          echo "binary_updated=true" >> $GITHUB_ENV
 
-      - name: Run trigger binary with URL
+      - name: Run trigger binary
         run: |
           ./${{ env.BIN_PATH }} -u "${{ env.TRIGGER_URL }}"
 
-      - name: Upload updated workspace as artifact
-        uses: actions/upload-artifact@v4
+      - name: Save updated workspace cache
+        if: always()
+        uses: actions/cache/save@v4
         with:
-          name: ${{ env.WORKSPACE_ARTIFACT }}
-          path: .
-          retention-days: 1  # or increase depending on your needs
+          path: |
+            trigger-bin
+            .workspace-state
+          key: workspace-${{ runner.os }}-${{ github.ref_name }}-${{ github.run_id }}
