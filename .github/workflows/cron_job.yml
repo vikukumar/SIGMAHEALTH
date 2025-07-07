@@ -29,79 +29,11 @@ jobs:
           restore-keys: |
             ${{ env.CACHE_KEY_PREFIX }}-
 
-      name: Trigger Cron Runner
-
-on:
-  schedule:
-    - cron: '*/5 * * * *'  # Every 5 minutes
-  workflow_dispatch:
-
-env:
-  TRIGGER_URL: ${{ secrets.CRON_JOB_URL }}
-  BIN_NAME: trigger.bin
-  BIN_PATH: trigger-bin/trigger
-  CACHE_KEY_PREFIX: sigmahealth-cache
-
-jobs:
-  trigger-job:
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout code (if any)
-        uses: actions/checkout@v4
-
-      - name: Restore workspace cache
-        if: always()
-        id: cache-restore
-        uses: actions/cache@v4
-        with:
-          path: .  # Cache the full workspace
-          key: ${{ env.CACHE_KEY_PREFIX }}-${{ github.run_id }}
-          restore-keys: |
-            ${{ env.CACHE_KEY_PREFIX }}-
-
       - name: Clean up old caches
         if: steps.cache-restore.outputs.cache-hit == 'true'
         uses: actions/cache/delete@v4
         with:
           key: ${{ env.CACHE_KEY_PREFIX }}-
-
-      - name: Create binary folder
-        run: mkdir -p trigger-bin
-
-      - name: Check if trigger binary exists
-        id: check_bin
-        run: |
-          if [[ -f "${{ env.BIN_PATH }}" ]]; then
-            echo "exists=true" >> $GITHUB_OUTPUT
-          else
-            echo "exists=false" >> $GITHUB_OUTPUT
-          fi
-
-      - name: Download trigger binary from private release if missing
-        if: steps.check_bin.outputs.exists == 'false'
-        env:
-          GH_TOKEN: ${{ secrets.GH_PAT }}
-        run: |
-          echo "Downloading trigger binary from GitHub release..."
-          LATEST_TAG=$(curl -s -H "Authorization: token $GH_TOKEN" https://api.github.com/repos/vikshrogit/trigger/releases/latest | jq -r .tag_name)
-          echo "$LATEST_TAG"
-          curl -L \
-            -H "Authorization: token $GH_TOKEN" \
-            -o "${{ env.BIN_PATH }}" \
-            "https://github.com/vikshrogit/trigger/releases/download/${LATEST_TAG}/${{ env.BIN_NAME }}"
-          chmod +x "${{ env.BIN_PATH }}"
-
-      - name: Run trigger binary with URL
-        run: |
-          ./${{ env.BIN_PATH }} -u "${{ env.TRIGGER_URL }}"
-
-      - name: Save workspace to cache
-        if: always()  # Ensure this runs even if previous step fails
-        uses: actions/cache@v4
-        with:
-          path: .  # Cache the full workspace
-          key: ${{ env.CACHE_KEY_PREFIX }}-${{ github.run_id }}
 
       - name: Create binary folder
         run: mkdir -p trigger-bin
