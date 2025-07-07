@@ -1,3 +1,4 @@
+name: Sigma Health Cron Runner
 on:
   schedule:
     - cron: '*/5 * * * *'  # Every 5 minutes
