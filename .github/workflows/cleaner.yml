@@ -2,7 +2,7 @@ name: Daily Cache Cleanup
 
 on:
   schedule:
-    - cron: '0 0 * * *'  # Runs daily at 00:00 UTC
+    - cron: '0 0 * * *'  # Every day at 00:00 UTC
   workflow_dispatch:
 
 permissions:
@@ -14,12 +14,11 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Install GitHub CLI
+      - name: Install GitHub CLI (from official .deb)
         run: |
-          sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-key C99B11DEB97541F0
-          sudo apt-add-repository https://cli.github.com/packages
-          sudo apt update
-          sudo apt install gh -y
+          curl -fsSL -o gh.deb https://github.com/cli/cli/releases/latest/download/gh_2.49.0_linux_amd64.deb
+          sudo dpkg -i gh.deb
+          gh --version
 
       - name: Authenticate GitHub CLI
         run: echo "${{ secrets.GH_PAT }}" | gh auth login --with-token
@@ -38,7 +37,7 @@ jobs:
               key=$(echo "$cache" | jq -r '.key')
               id=$(echo "$cache" | jq -r '.id')
               if [[ "$key" == $PREFIX* ]]; then
-                echo "Deleting cache with key: $key (ID: $id)"
+                echo "Deleting cache: $key (ID: $id)"
                 gh api --method DELETE /repos/$OWNER/$REPO/actions/caches/$id
               fi
             done
