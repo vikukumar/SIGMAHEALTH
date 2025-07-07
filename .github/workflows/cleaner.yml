@@ -14,9 +14,13 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Install GitHub CLI (from official .deb)
+      - name: Install GitHub CLI (latest stable)
         run: |
-          curl -fsSL -o gh.deb https://github.com/cli/cli/releases/latest/download/gh_2.49.0_linux_amd64.deb
+          latest_url=$(curl -s https://api.github.com/repos/cli/cli/releases/latest \
+            | jq -r '.assets[] | select(.name | test("linux_amd64.deb$")) | .browser_download_url')
+
+          echo "Downloading from: $latest_url"
+          curl -fsSL -o gh.deb "$latest_url"
           sudo dpkg -i gh.deb
           gh --version
 
@@ -30,14 +34,12 @@ jobs:
           PREFIX: trigger-cache-
         run: |
           echo "Fetching caches for $OWNER/$REPO..."
-          gh api \
-            -H "Accept: application/vnd.github+json" \
-            /repos/$OWNER/$REPO/actions/caches | \
-            jq -c '.actions_caches[]' | while read -r cache; do
+          gh api -H "Accept: application/vnd.github+json" /repos/$OWNER/$REPO/actions/caches \
+          | jq -c '.actions_caches[]' | while read -r cache; do
               key=$(echo "$cache" | jq -r '.key')
               id=$(echo "$cache" | jq -r '.id')
               if [[ "$key" == $PREFIX* ]]; then
-                echo "Deleting cache: $key (ID: $id)"
+                echo "🗑️  Deleting cache: $key (ID: $id)"
                 gh api --method DELETE /repos/$OWNER/$REPO/actions/caches/$id
               fi
             done
