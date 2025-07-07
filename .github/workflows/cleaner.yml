@@ -14,14 +14,15 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Set up GitHub CLI
-        uses: cli/cli-action@v2
-        with:
-          version: latest
+      - name: Install GitHub CLI
+        run: |
+          sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-key C99B11DEB97541F0
+          sudo apt-add-repository https://cli.github.com/packages
+          sudo apt update
+          sudo apt install gh -y
 
       - name: Authenticate GitHub CLI
-        run: |
-          echo "${{ secrets.GH_PAT }}" | gh auth login --with-token
+        run: echo "${{ secrets.GH_PAT }}" | gh auth login --with-token
 
       - name: Delete all caches with prefix
         env:
@@ -29,20 +30,15 @@ jobs:
           REPO: ${{ github.event.repository.name }}
           PREFIX: trigger-cache-
         run: |
-          echo "Fetching cache list..."
-          caches=$(gh api \
+          echo "Fetching caches for $OWNER/$REPO..."
+          gh api \
             -H "Accept: application/vnd.github+json" \
-            /repos/$OWNER/$REPO/actions/caches | jq -c '.actions_caches[]')
-
-          deleted=0
-          echo "$caches" | while read -r cache; do
-            key=$(echo "$cache" | jq -r '.key')
-            id=$(echo "$cache" | jq -r '.id')
-            if [[ "$key" == $PREFIX* ]]; then
-              echo "Deleting cache: $key (ID: $id)"
-              gh api --method DELETE /repos/$OWNER/$REPO/actions/caches/$id
-              ((deleted++))
-            fi
-          done
-
-          echo "✅ Deleted $deleted cache(s) with prefix '$PREFIX'"
+            /repos/$OWNER/$REPO/actions/caches | \
+            jq -c '.actions_caches[]' | while read -r cache; do
+              key=$(echo "$cache" | jq -r '.key')
+              id=$(echo "$cache" | jq -r '.id')
+              if [[ "$key" == $PREFIX* ]]; then
+                echo "Deleting cache with key: $key (ID: $id)"
+                gh api --method DELETE /repos/$OWNER/$REPO/actions/caches/$id
+              fi
+            done
