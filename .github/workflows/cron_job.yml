@@ -29,11 +29,11 @@ jobs:
           restore-keys: |
             ${{ env.CACHE_KEY_PREFIX }}-
 
-      - name: Clean up old caches
-        if: steps.cache-restore.outputs.cache-hit == 'true'
-        uses: actions/cache/delete@v4
-        with:
-          key: ${{ env.CACHE_KEY_PREFIX }}-
+      # - name: Clean up old caches
+      #   if: steps.cache-restore.outputs.cache-hit == 'true'
+      #   uses: actions/cache/delete@v4
+      #   with:
+      #     key: ${{ env.CACHE_KEY_PREFIX }}-
 
       - name: Create binary folder
         run: mkdir -p trigger-bin
